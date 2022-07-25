@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::entrypoint::ProgramResult;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
@@ -7,7 +8,7 @@ pub mod funding {
     use super::*;
 
     // create a campaign, only owner of this campaign can withdraw the fund
-    pub fn create(ctx: Context<Create>, name: String, desc: String) -> Result<()> {
+    pub fn create(ctx: Context<Create>, name: String, desc: String) -> ProgramResult {
         let campaign  = &mut ctx.accounts.campaign;
         campaign.name = name;
         campaign.desc = desc;
@@ -19,7 +20,7 @@ pub mod funding {
    
 
     //create a withdraw function
-    pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
+    pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> ProgramResult {
         let campaign = &mut ctx.accounts.campaign;
         let user = &mut ctx.accounts.user;
         if campaign.admin != *user.key
@@ -34,6 +35,12 @@ pub mod funding {
         {
             return Err(ProgramError::InsufficientFunds);
         }
+
+        //transfer fund
+        **campaign.to_account_info().try_borrow_mut_lamports()? -= amount;
+        **user.to_account_info().try_borrow_mut_lamports()? += amount;
+        Ok(())
+
     }
 }
 
@@ -49,6 +56,13 @@ pub struct Create<'info>
     #[account(mut)]
     pub user: Signer<'info>,
     pub system_program: Program<'info, System>
+}
+
+#[derive(Accounts)]
+pub struct Withdraw<'info>{
+    pub campaign: Account<'info, Campaign>,
+    #[account(mut)]
+    pub user: Signer<'info>
 }
 
 //specify what campaign account looks like
