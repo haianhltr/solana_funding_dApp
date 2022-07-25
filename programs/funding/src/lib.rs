@@ -17,6 +17,21 @@ pub mod funding {
         Ok(())
     }
    
+
+    //create a withdraw function
+    pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
+        let campaign = &mut ctx.accounts.campaign;
+        let user = &mut ctx.accounts.user;
+        if campaign.admin != *user.key
+        {
+            return Err(ProgramError::IncorrectProgramId);
+        }
+        //check if campaign acc have enough fund to withdraw
+        if **campaign.to_account_info().lamports.borrow() < amount 
+        {
+            return Err(ProgramError::InsufficientFunds);
+        }
+    }
 }
 
 
