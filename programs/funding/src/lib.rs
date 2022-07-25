@@ -19,3 +19,16 @@ pub mod funding {
    
 }
 
+
+//also called 'macro'
+#[derive(Accounts)]
+pub struct Create<'info>
+{
+    #[account(init, payer=user,space=9000)]
+    pub campaign: Account<'info, Campaign>,
+    //user who calling create function
+    #[account(mut)]
+    pub user: Signer<'info>,
+    pub system_program: Program<'info, System>
+}
+
