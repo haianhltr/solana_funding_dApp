@@ -33,3 +33,11 @@ pub struct Create<'info>
     pub system_program: Program<'info, System>
 }
 
+//specify what campaign account looks like
+#[account]
+pub struct Campaign{
+    pub admin: Pubkey,
+    pub name: String,
+    pub desc: String,
+    pub amount_donated: u64
+}
