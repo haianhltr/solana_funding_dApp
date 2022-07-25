@@ -1,14 +1,14 @@
 [features]
 seeds = false
 [programs.localnet]
-funding = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+funding = "A6ckA4ZaCUTmDvRYVseycUx2dCTfPMoAMoDSj1FFi9qH"
 
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
-wallet = "/Users/anhletruong/.config/solana/id.json"
+cluster = "devnet"
+wallet = "./id.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
