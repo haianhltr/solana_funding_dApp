@@ -6,10 +6,16 @@ declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 pub mod funding {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+    // create a campaign, only owner of this campaign can withdraw the fund
+    pub fn create(ctx: Context<Create>, name: String, desc: String) -> Result<()> {
+        let campaign  = &mut ctx.accounts.campaign;
+        campaign.name = name;
+        campaign.desc = desc;
+        campaign.amount_donated = 0;
+        //admin is the one that can withdraw the money
+        campaign.admin = *ctx.accounts.user.key;
         Ok(())
     }
+   
 }
 
-#[derive(Accounts)]
-pub struct Initialize {}
