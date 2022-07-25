@@ -24,7 +24,8 @@ pub mod funding {
 #[derive(Accounts)]
 pub struct Create<'info>
 {
-    #[account(init, payer=user,space=9000)]
+    //solana will use a hash function to determine address for a new PDA account based on seeds, nump
+    #[account(init, payer=user,space=9000, seeds = [b"CAMPAIGN_DEMO".as_ref(), user.key().as_ref()], bump)]
     pub campaign: Account<'info, Campaign>,
     //user who calling create function
     #[account(mut)]
