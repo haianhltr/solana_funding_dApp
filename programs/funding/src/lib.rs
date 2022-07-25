@@ -26,8 +26,11 @@ pub mod funding {
         {
             return Err(ProgramError::IncorrectProgramId);
         }
+
+        //calc rent balance
+        let rent_balance = Rent::get()?.minimum_balance(campaign.to_account_info().data_len());
         //check if campaign acc have enough fund to withdraw
-        if **campaign.to_account_info().lamports.borrow() < amount 
+        if **campaign.to_account_info().lamports.borrow() - rent_balance < amount 
         {
             return Err(ProgramError::InsufficientFunds);
         }
