@@ -26,12 +26,18 @@ const App = () => {
 
   //function for connecting wallet
   const connectWallet = async () => {
-
+    const {solana} = window;
+    if(solana)
+    {
+      const response = await solana.connect()
+      console.log('Connected with public key:', response.publicKey.toString())
+      setWalletAddress(response.publicKey.toString())
+    }
   }
 
-  const renderNotConnectContainer = () => {
-    <button onClick={connectWallet}>Connect to wallet</button>
-  };
+  const renderNotConnectedContainer = () => (
+		<button onClick={connectWallet}>Connect to Wallet</button>
+	);
 
   useEffect(() => {
     //run when page is loaded
@@ -44,7 +50,7 @@ const App = () => {
   }, []);
 
   return (
-  <div className="App">{!walletAddress && renderNotConnectContainer()}</div>
+  <div className="App">{!walletAddress && renderNotConnectedContainer()}</div>
   )
 };
 
