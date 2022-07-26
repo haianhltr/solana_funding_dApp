@@ -1,4 +1,5 @@
 import "./App.css";
+import {useEffect} from "react"
 
 const App = () => {
   const checkIfWalletIsConnected = async () => {
@@ -15,6 +16,16 @@ const App = () => {
       console.error(error);
     }
   };
+  useEffect(() => {
+    //run when page is loaded
+    const onLoad = async() => {
+      await checkIfWalletIsConnected()
+    
+    }
+    window.addEventListener('load',onLoad)
+    //return eventListener when window close
+    return () => window.removeEventListener("load", onLoad)
+  }, [])
 };
 
 export default App;
