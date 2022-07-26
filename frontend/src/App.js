@@ -10,8 +10,26 @@ import {
 } from "@project-serum/anchor";
 import { useEffect, useState } from "react";
 
+const programID = new PublicKey(idl.metadata.address);
+const network = clusterApiUrl("devnet")
+
+//ops control how we want to acknoledge when transaction is done
+// we can choose when to receive a confirmation when a transaction succedd.
+const opts = {
+  preflightCommitment: "processed",
+}
+const {SystemProgram} = web3;
+
 const App = () => {
-  const [walletAddress, setWalletAddress] = useState(null)
+  const [walletAddress, setWalletAddress] = useState(null);
+
+  //provider is an authenticated connection to Solana
+  // you can't even retrieve anything from Solana if you don't have a wallet
+  const getProvider = () => {
+    const connection = new Connection(network,opts.preflightCommitment);
+    const provider = new AnchorProvider(connection, window.solana, opts.preflightCommitment)
+    return provider
+  }
   const checkIfWalletIsConnected = async () => {
     try {
       const { solana } = window;
