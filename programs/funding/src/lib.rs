@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::entrypoint::ProgramResult;
 
-declare_id!("A6ckA4ZaCUTmDvRYVseycUx2dCTfPMoAMoDSj1FFi9qH");
+declare_id!("4nw3c3SucBrn5zsGKSsBoUxmX12p9uEAN3ZDLP8yZVB5");
 
 #[program]
 pub mod funding {
@@ -80,6 +80,7 @@ pub struct Create<'info>
 
 #[derive(Accounts)]
 pub struct Withdraw<'info>{
+    #[account(mut)]
     pub campaign: Account<'info, Campaign>,
     #[account(mut)]
     pub user: Signer<'info>
@@ -87,6 +88,7 @@ pub struct Withdraw<'info>{
 
 #[derive(Accounts)]
 pub struct Donate<'info>{
+    #[account(mut)]
     pub campaign: Account<'info, Campaign>,
     #[account(mut)]
     pub user: Signer<'info>,
