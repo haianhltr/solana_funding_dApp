@@ -9,6 +9,8 @@ import {
   BN,
 } from "@project-serum/anchor";
 import { useEffect, useState } from "react";
+import {Buffer} from 'buffer'
+window.Buffer = Buffer;
 
 const programID = new PublicKey(idl.metadata.address);
 const network = clusterApiUrl("devnet");
