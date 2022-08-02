@@ -10,6 +10,7 @@ import {
 } from "@project-serum/anchor";
 import { useEffect, useState } from "react";
 import {Buffer} from 'buffer'
+import { connect } from "http2";
 window.Buffer = Buffer;
 
 const programID = new PublicKey(idl.metadata.address);
@@ -24,6 +25,7 @@ const { SystemProgram } = web3;
 
 const App = () => {
   const [walletAddress, setWalletAddress] = useState(null);
+  const [campaigns, setCampaigns] = useState([]);
 
   //provider is an authenticated connection to Solana
   // you can't even retrieve anything from Solana if you don't have a wallet
@@ -66,6 +68,17 @@ const App = () => {
       setWalletAddress(response.publicKey.toString());
     }
   };
+  
+  const getCampaigns = async() => {
+    const connection = new Connection(network, opts.preflightCommitment)
+    const provider = getProvider()
+    const program = new Program(idl, programID, provider)
+    Promise.all((await connection.getProgramAccounts(programID)).map(async campaign => ({
+      //for each campaige we map an object
+      ...(await program.account.campaign.fetch(campaign.pubkey)),
+      pubkey: campaign.pubkey
+    }))).then(campaigns => setCampaigns(campaigns));
+  }
 
   const createCampaign = async () => {
     try {
@@ -93,10 +106,22 @@ const App = () => {
 
   const renderNotConnectedContainer = () => (
     <button onClick={connectWallet}>Connect to Wallet</button>
+
   );
 
   const renderConnectedContainer = () => (
+    <>
     <button onClick={createCampaign}>Create a campaign..</button>
+    <button onClick = {getCampaigns}>Get a list of campaigns...</button>
+    <br/>
+    {campaigns.map(campaign => (<>
+    <p>Campaign ID: {campaign.pubkey.toString()}</p>
+    <p>Balance: {(campaign.amountDonated / web3.LAMPORTS_PER_SOL).toString()}</p>
+    <p>{campaign.name}</p>
+    <p>{campaign.description}</p>
+    <br/>
+     </>))}
+    </>
   );
 
   useEffect(() => {
