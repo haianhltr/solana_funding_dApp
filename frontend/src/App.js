@@ -10,7 +10,6 @@ import {
 } from "@project-serum/anchor";
 import { useEffect, useState } from "react";
 import {Buffer} from 'buffer'
-import { connect } from "http2";
 window.Buffer = Buffer;
 
 const programID = new PublicKey(idl.metadata.address);
