@@ -76,8 +76,8 @@ const App = () => {
       //for each campaige we map an object
       ...(await program.account.campaign.fetch(campaign.pubkey)),
       pubkey: campaign.pubkey
-    }))).then(campaigns => setCampaigns(campaigns));
-  }
+    }))).then((campaigns) => setCampaigns(campaigns));
+  };
 
   const createCampaign = async () => {
     try {
@@ -113,14 +113,14 @@ const App = () => {
           campaign: publicKey,
           user: provider.wallet.publicKey,
           systemProgram: SystemProgram.programId,
-        }
+        },
       });
       console.log('Donated some money to:', publicKey.toString());
       getCampaigns();
     }
     catch(error)
     {
-      console.error("Error creating campaign account:", error)
+      console.error("Error donating:", error)
     }
   }
 
@@ -134,7 +134,7 @@ const App = () => {
     <button onClick={createCampaign}>Create a campaign..</button>
     <button onClick = {getCampaigns}>Get a list of campaigns...</button>
     <br/>
-    {campaigns.map(campaign => (<>
+    {campaigns.map((campaign) => (<>
     <p>Campaign ID: {campaign.pubkey.toString()}</p>
     <p>Balance: {(campaign.amountDonated / web3.LAMPORTS_PER_SOL).toString()}</p>
     <p>{campaign.name}</p>
