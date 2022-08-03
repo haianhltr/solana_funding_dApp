@@ -107,6 +107,22 @@ const App = () => {
     }
   };
 
+  const withdraw = async (publicKey) => {
+    try {
+      const provider = getProvider();
+      const program = new Program(idl, programID, provider);
+      await program.rpc.withdraw(new BN(0.2 * web3.LAMPORTS_PER_SOL), {
+        accounts: {
+        campaign: publicKey,
+        user: provider.wallet.publicKey,
+        }
+      });
+      console.log("Withdrew some money from:", publicKey.toString());
+    } catch (error) {
+      console.error("Error withdrawing:", error);
+    }
+  };
+
   const donate = async (publicKey) => {
     try {
       const provider = getProvider();
@@ -146,6 +162,9 @@ const App = () => {
           <p>{campaign.description}</p>
           <button onClick={() => donate(campaign.pubkey)}>
             Click to donate!
+          </button>
+          <button onClick={() => withdraw(campaign.pubkey)}>
+            Click to withdraw
           </button>
           <br />
         </>
